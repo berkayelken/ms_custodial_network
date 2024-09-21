@@ -30,7 +30,7 @@ import java.util.UUID;
 public class JwtTokenProviderTest {
 	private static final String AUTHORITIES_KEY = "roles";
 	private static final String TEST_STR = UUID.randomUUID().toString();
-	private static final Authentication TEST_AUTH = createDefaultAuth();
+	static final Authentication TEST_AUTH = createDefaultAuth();
 
 	@Mock
 	private JwtProperties properties;
@@ -85,7 +85,7 @@ public class JwtTokenProviderTest {
 		return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
 
-	private static String createToken() {
+	static String createToken() {
 		Claims claims = Jwts.claims().setSubject(TEST_STR).setId(TEST_STR);
 
 		claims.put(AUTHORITIES_KEY, UserType.ARTIST.getAuthorityRole());
@@ -94,4 +94,13 @@ public class JwtTokenProviderTest {
 				.setExpiration(Date.from(Instant.now().plusSeconds(100000)))
 				.signWith(createDefaultSecretKey(), SignatureAlgorithm.HS256).compact();
 	}
+
+	static Claims createClaims() {
+		Claims claims = Jwts.claims().setSubject(TEST_STR).setId(TEST_STR);
+
+		claims.put(AUTHORITIES_KEY, UserType.ARTIST.getAuthorityRole());
+
+		return claims;
+	}
+
 }
