@@ -1,7 +1,9 @@
 package io.github.berkayelken.custodial.network.domain;
 
-import io.github.berkayelken.custodial.network.domain.auth.UserType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.FieldType;
@@ -9,6 +11,9 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Document(collation = "user")
 public class UserEntity {
 	@MongoId(targetType = FieldType.STRING)

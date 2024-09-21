@@ -20,8 +20,7 @@ public class JwtProperties {
 		return Date.from(createAndGetExpireAt());
 	}
 
-	private Instant createAndGetExpireAt() {
+	public Instant createAndGetExpireAt() {
 		return Instant.now().plusMillis(validityInMs);
 	}
-
 }
