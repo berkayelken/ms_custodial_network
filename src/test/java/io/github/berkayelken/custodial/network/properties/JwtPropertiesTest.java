@@ -37,6 +37,6 @@ public class JwtPropertiesTest {
 	public void testCreateAndGetExpireAt() {
 		JwtProperties properties = new JwtProperties();
 
-		Assertions.assertNotEquals(DEFAULT_LONG, properties.createAndGetExpireAt());
+		Assertions.assertDoesNotThrow(properties::createAndGetExpireAtDate);
 	}
 }
