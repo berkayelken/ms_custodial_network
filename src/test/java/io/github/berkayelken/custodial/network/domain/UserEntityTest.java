@@ -39,4 +39,15 @@ public class UserEntityTest {
 		Assertions.assertEquals(TEST_STR, entity.getPassword());
 		Assertions.assertEquals(UserType.ARTIST.getValidOperations(), entity.getRole());
 	}
+
+	public static UserEntity createInstance() {
+		UserEntity entity = new UserEntity();
+
+		entity.setRole(UserType.ARTIST.getValidOperations());
+		entity.setId(TEST_STR);
+		entity.setEmail(TEST_STR);
+		entity.setPassword(TEST_STR);
+
+		return entity;
+	}
 }
