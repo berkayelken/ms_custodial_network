@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,7 +16,12 @@ public class JwtProperties {
 	private String secretKey;
 	private long validityInMs;
 
-	public long createAndGetExpireAt() {
-		return Instant.now().plusMillis(validityInMs).toEpochMilli();
+	public Date createAndGetExpireAtDate() {
+		return Date.from(createAndGetExpireAt());
 	}
+
+	private Instant createAndGetExpireAt() {
+		return Instant.now().plusMillis(validityInMs);
+	}
+
 }
