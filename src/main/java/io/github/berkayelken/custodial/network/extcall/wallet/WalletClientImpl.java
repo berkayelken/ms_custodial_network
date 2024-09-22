@@ -20,8 +20,8 @@ public class WalletClientImpl implements WalletClient {
 	}
 
 	@Override
-	public Wallet createWallet(String email) {
-		return feignClient.createWallet(properties.getApiKey(), new WalletRequestModel(email));
+	public void createWallet(String email) {
+		feignClient.createWallet(properties.getApiKey(), new WalletRequestModel(email));
 	}
 
 	@Override
