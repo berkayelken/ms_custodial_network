@@ -27,5 +27,5 @@ public class AuthController {
 	public LoginResponse register(@RequestHeader ("email") String email, @RequestHeader ("password") String password) {
 		return authenticationManager.doLogin(email, password);
 	}
-	
+
 }
