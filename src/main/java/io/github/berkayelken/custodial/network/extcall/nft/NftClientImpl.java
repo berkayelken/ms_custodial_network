@@ -45,14 +45,14 @@ public class NftClientImpl implements NftClient {
 	public List<Nft> getAllNft() {
 		NftCollections collections = collectionClient.getAllCollections();
 		return collections.getResults().stream().map(NftCollection::getWalletAddress)
-				.map(address -> getNftList(String.format(WALLET_NFT_TEMPLATE, address, CrossMintConstants.CHAIN)))
+				.map(address -> getNftList(String.format(COLLECTION_NFT_TEMPLATE, address, CrossMintConstants.CHAIN)))
 				.flatMap(Collection::stream).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Nft> getSpecificCollectionNft(String collectionId) {
 		NftCollection nftCollection = collectionClient.getCollection(collectionId);
-		return getNftList(String.format(WALLET_NFT_TEMPLATE, nftCollection.getWalletAddress(), CrossMintConstants.CHAIN));
+		return getNftList(String.format(COLLECTION_NFT_TEMPLATE, nftCollection.getWalletAddress(), CrossMintConstants.CHAIN));
 	}
 
 	@Override
