@@ -4,7 +4,9 @@ import io.github.berkayelken.custodial.network.domain.cross.mint.CrossMintMetaDa
 import io.github.berkayelken.custodial.network.domain.cross.mint.collection.NftCollection;
 import io.github.berkayelken.custodial.network.domain.cross.mint.collection.NftCollections;
 import io.github.berkayelken.custodial.network.domain.cross.mint.collection.request.CollectionRequestModel;
+import io.github.berkayelken.custodial.network.domain.cross.mint.wallet.Wallet;
 import io.github.berkayelken.custodial.network.extcall.CrossMintFeignClient;
+import io.github.berkayelken.custodial.network.extcall.wallet.WalletClient;
 import io.github.berkayelken.custodial.network.properties.CrossMintProperties;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,12 @@ import org.springframework.stereotype.Service;
 public class CollectionClientImpl implements CollectionClient {
 	private final CrossMintFeignClient feignClient;
 	private final CrossMintProperties properties;
+	private final WalletClient walletClient;
 
-	public CollectionClientImpl(CrossMintFeignClient feignClient, CrossMintProperties properties) {
+	public CollectionClientImpl(CrossMintFeignClient feignClient, CrossMintProperties properties, WalletClient walletClient) {
 		this.feignClient = feignClient;
 		this.properties = properties;
+		this.walletClient = walletClient;
 	}
 
 	@Override
@@ -29,9 +33,10 @@ public class CollectionClientImpl implements CollectionClient {
 	}
 
 	@Override
-	public NftCollection createCollection(CrossMintMetaData metadata, String price, String recipientAddress, int supplyLimit) {
+	public NftCollection createCollection(CrossMintMetaData metadata, String price, String email, int supplyLimit) {
+		Wallet wallet = walletClient.getWalletOfUser(email);
 		return feignClient.createCollection(properties.getApiKey(),
-				new CollectionRequestModel(metadata, price, recipientAddress, supplyLimit));
+				new CollectionRequestModel(metadata, price, wallet.getPublicKey(), supplyLimit));
 	}
 
 }

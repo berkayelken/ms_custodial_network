@@ -9,5 +9,5 @@ public interface CollectionClient {
 
 	NftCollection getCollection(String collectionID);
 
-	NftCollection createCollection(CrossMintMetaData metadata, String price, String recipientAddress, int supplyLimit);
+	NftCollection createCollection(CrossMintMetaData metadata, String price, String email, int supplyLimit);
 }
