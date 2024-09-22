@@ -1,5 +1,6 @@
 package io.github.berkayelken.custodial.network.domain.cross.mint.collection.request;
 
+import io.github.berkayelken.custodial.network.domain.cross.mint.CrossMintConstants;
 import io.github.berkayelken.custodial.network.domain.cross.mint.CrossMintMetaData;
 import io.github.berkayelken.custodial.network.domain.cross.mint.collection.CollectionPayment;
 
@@ -17,4 +18,13 @@ public class CollectionRequestModel {
 	private int supplyLimit;
 	private CollectionPayment payments;
 	private boolean reuploadLinkedFiles;
+
+	public CollectionRequestModel(CrossMintMetaData metadata, String price, String recipientAddress, int supplyLimit) {
+		chain = CrossMintConstants.CHAIN;
+		this.metadata = metadata;
+		fungibility = CrossMintConstants.FUNGIBILITY;
+		this.supplyLimit = supplyLimit;
+		payments = new CollectionPayment(recipientAddress, price);
+		reuploadLinkedFiles = true;
+	}
 }
