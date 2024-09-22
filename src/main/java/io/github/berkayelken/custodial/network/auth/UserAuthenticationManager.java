@@ -7,6 +7,7 @@ import io.github.berkayelken.custodial.network.domain.auth.UserType;
 import io.github.berkayelken.custodial.network.exception.AuthorizationException;
 import io.github.berkayelken.custodial.network.exception.InvalidAuthenticationTokenException;
 import io.github.berkayelken.custodial.network.exception.UsedEmailException;
+import io.github.berkayelken.custodial.network.extcall.wallet.WalletClient;
 import io.github.berkayelken.custodial.network.properties.JwtProperties;
 import io.github.berkayelken.custodial.network.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,13 @@ public class UserAuthenticationManager implements AuthenticationManager {
 	private final UserRepository repository;
 	private final JwtTokenProvider tokenProvider;
 	private final JwtProperties jwtProperties;
+	private final WalletClient walletClient;
 
-	public UserAuthenticationManager(UserRepository repository, JwtTokenProvider tokenProvider, JwtProperties jwtProperties) {
+	public UserAuthenticationManager(UserRepository repository, JwtTokenProvider tokenProvider, JwtProperties jwtProperties, WalletClient walletClient) {
 		this.repository = repository;
 		this.tokenProvider = tokenProvider;
 		this.jwtProperties = jwtProperties;
+		this.walletClient = walletClient;
 	}
 
 	@Override
@@ -47,6 +50,8 @@ public class UserAuthenticationManager implements AuthenticationManager {
 
 		UserEntity user = UserEntity.builder().email(email).password(encoder.encode(password)).role(userType.getValidOperations())
 				.build();
+		repository.save(user);
+		walletClient.createWallet(email);
 
 		Authentication authentication = authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 		String token = tokenProvider.createToken(authentication, user);
