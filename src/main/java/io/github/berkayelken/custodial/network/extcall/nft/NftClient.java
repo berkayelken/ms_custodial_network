@@ -8,8 +8,11 @@ import io.github.berkayelken.custodial.network.domain.cross.mint.nft.request.Nft
 import java.util.List;
 
 public interface NftClient {
-	// idetifier email:<email_address>:<chain> or <chain>:<address>
-	List<Nft> getNftFromWallet(String identifier);
+	List<Nft> getSpecificUserNft(String email);
+
+	List<Nft> getAllNft();
+
+	List<Nft> getSpecificCollectionNft(String collectionId);
 
 	NftTransferResponse transferNft(NftTransferModel requestModel);
 
