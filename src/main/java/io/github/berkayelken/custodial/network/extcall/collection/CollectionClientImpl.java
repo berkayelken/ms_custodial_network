@@ -33,5 +33,5 @@ public class CollectionClientImpl implements CollectionClient {
 		return feignClient.createCollection(properties.getApiKey(),
 				new CollectionRequestModel(metadata, price, recipientAddress, supplyLimit));
 	}
-	
+
 }
