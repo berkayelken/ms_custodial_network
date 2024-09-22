@@ -6,6 +6,9 @@ server:
 spring:
   application:
     name: ms_custodial_network
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
 # ----------------------------------------------------------------------------------------------------------------------------------
 jwt:
   secret-key: "4eded600-1ff4-4a8a-8461-9a91ad8dc644"
