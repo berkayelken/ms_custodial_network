@@ -1,4 +1,4 @@
-package io.github.berkayelken.custodial.network.extcall;
+package io.github.berkayelken.custodial.network.extcall.collection;
 
 import io.github.berkayelken.custodial.network.domain.cross.mint.CrossMintMetaData;
 import io.github.berkayelken.custodial.network.domain.cross.mint.collection.NftCollection;
