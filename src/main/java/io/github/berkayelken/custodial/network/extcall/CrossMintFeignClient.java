@@ -38,7 +38,6 @@ public interface CrossMintFeignClient {
 	@GetMapping("/v1-alpha1/wallets")
 	List<Wallet> getWalletsOfUser(@RequestHeader(API_KEY_HEADER) String apiKey, @RequestParam String email);
 
-	// idetifier email:<email_address>:<chain> or <chain>:<address>
 	@GetMapping("/2022-06-09/wallets/{identifier}/nfts")
 	List<Nft> getNftFromWallet(@RequestHeader(API_KEY_HEADER) String apiKey, @PathVariable String identifier, @RequestParam int page, @RequestParam int perPage);
 
@@ -47,5 +46,5 @@ public interface CrossMintFeignClient {
 
 	@PostMapping("/2022-06-09/collections/{collectionId}/nfts")
 	NftTransferResponse mintNft(@RequestHeader(API_KEY_HEADER) String apiKey, @PathVariable String collectionId, @RequestBody NftMintModel requestModel);
-	
+
 }
