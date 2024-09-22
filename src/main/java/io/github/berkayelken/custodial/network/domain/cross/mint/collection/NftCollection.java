@@ -16,4 +16,8 @@ public class NftCollection {
 	private Chain onChain;
 	private int supplyLimit;
 	private CollectionPayment payments;
+
+	public String getWalletAddress() {
+		return payments.getRecipientAddress();
+	}
 }
