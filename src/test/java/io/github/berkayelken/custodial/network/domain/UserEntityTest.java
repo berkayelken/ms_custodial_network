@@ -12,7 +12,12 @@ public class UserEntityTest {
 
 	@Test
 	public void testNoArgsConstructor() {
-		Assertions.assertDoesNotThrow(UserEntity::new);
+		Assertions.assertDoesNotThrow(() -> new UserEntity());
+	}
+
+	@Test
+	public void testAllArgsConstructor() {
+		Assertions.assertDoesNotThrow(() -> new UserEntity(TEST_STR, TEST_STR, TEST_STR, DEFAULT_INT));
 	}
 
 	@Test
