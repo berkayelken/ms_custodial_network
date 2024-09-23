@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
@@ -22,20 +23,23 @@ import static org.springframework.security.config.web.server.SecurityWebFiltersO
 class SecurityConfig implements WebFluxConfigurer {
 	@Bean
 	public SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http, AuthenticationFilter tokenFilter) {
-		return http.cors(ServerHttpSecurity.CorsSpec::disable).csrf(ServerHttpSecurity.CsrfSpec::disable)
+		return http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(ServerHttpSecurity.CsrfSpec::disable)
 				.addFilterAt(tokenFilter, AUTHENTICATION).build();
 	}
 
-	@Bean
-	public CorsWebFilter corsWebFilter() {
-		CorsConfiguration corsConfig = new CorsConfiguration();
-		corsConfig.setAllowedOrigins(List.of("*"));
-		corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-		corsConfig.setAllowedHeaders(List.of("*"));
-		corsConfig.setMaxAge(8000L);
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", corsConfig);
+	private CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
 
-		return new CorsWebFilter(source);
+		configuration.addAllowedOriginPattern("*");
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT",
+				"DELETE", "OPTIONS"));
+		configuration.setAllowedHeaders(List.of("*"));
+		configuration.setMaxAge(3600L);
+		configuration.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+
+		return source;
 	}
 }

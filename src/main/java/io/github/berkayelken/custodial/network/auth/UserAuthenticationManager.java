@@ -10,6 +10,7 @@ import io.github.berkayelken.custodial.network.exception.UsedEmailException;
 import io.github.berkayelken.custodial.network.extcall.wallet.WalletClient;
 import io.github.berkayelken.custodial.network.properties.JwtProperties;
 import io.github.berkayelken.custodial.network.repository.UserRepository;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class UserAuthenticationManager implements AuthenticationManager {
@@ -33,6 +36,7 @@ public class UserAuthenticationManager implements AuthenticationManager {
 		this.walletClient = walletClient;
 	}
 
+	@SneakyThrows
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String email = String.valueOf(authentication.getPrincipal());
@@ -41,16 +45,17 @@ public class UserAuthenticationManager implements AuthenticationManager {
 		return new UsernamePasswordAuthenticationToken(email, authModel.getPassword(), authModel.getAuthorities());
 	}
 
-	public LoginResponse doRegister(String email, String password, UserType userType) {
+	public LoginResponse doRegister(String email, String password, UserType userType)
+			throws ExecutionException, InterruptedException {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-		if (repository.existsByEmail(email)) {
+		if (Boolean.TRUE.equals(repository.existsByEmail(email).toFuture().get())) {
 			throw new UsedEmailException();
 		}
 
 		UserEntity user = UserEntity.builder().email(email).password(encoder.encode(password)).role(userType.getValidOperations())
 				.build();
-		repository.save(user);
+		repository.save(user).toFuture().get();
 		walletClient.createWallet(email);
 
 		Authentication authentication = authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
@@ -60,7 +65,7 @@ public class UserAuthenticationManager implements AuthenticationManager {
 				.build();
 	}
 
-	public LoginResponse doLogin(String email, String password) {
+	public LoginResponse doLogin(String email, String password) throws ExecutionException, InterruptedException {
 		UserEntity user = getUser(email);
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -76,8 +81,8 @@ public class UserAuthenticationManager implements AuthenticationManager {
 				.build();
 	}
 
-	private UserEntity getUser(String email) {
-		UserEntity user = repository.findByEmail(email);
+	private UserEntity getUser(String email) throws ExecutionException, InterruptedException {
+		UserEntity user = repository.findByEmail(email).toFuture().get();
 		if (user == null)
 			throw new AuthorizationException("User cannot be found. Authorization is failed.");
 

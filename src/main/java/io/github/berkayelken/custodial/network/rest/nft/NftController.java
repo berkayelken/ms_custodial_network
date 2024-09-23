@@ -4,6 +4,7 @@ import io.github.berkayelken.custodial.network.domain.cross.mint.nft.Nft;
 import io.github.berkayelken.custodial.network.domain.cross.mint.nft.NftTransferResponse;
 import io.github.berkayelken.custodial.network.domain.cross.mint.nft.request.NftTransferModel;
 import io.github.berkayelken.custodial.network.extcall.nft.NftClient;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
-@RequestMapping ("/nft")
+@RequestMapping ("/api/nft")
 public class NftController {
 	private final NftClient client;
 

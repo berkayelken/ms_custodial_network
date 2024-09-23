@@ -18,6 +18,9 @@ public class NftCollection {
 	private CollectionPayment payments;
 
 	public String getWalletAddress() {
+		if (payments == null) {
+			return null;
+		}
 		return payments.getRecipientAddress();
 	}
 }

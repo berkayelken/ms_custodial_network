@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -44,8 +45,7 @@ public class NftClientImpl implements NftClient {
 	@Override
 	public List<Nft> getAllNft() {
 		NftCollections collections = collectionClient.getAllCollections();
-		return collections.getResults().stream().map(NftCollection::getWalletAddress)
-				.map(address -> getNftList(String.format(COLLECTION_NFT_TEMPLATE, address, CrossMintConstants.CHAIN)))
+		return collections.getResults().stream().map(NftCollection::getWalletAddress).filter(Objects::nonNull).map(this::getNftList)
 				.flatMap(Collection::stream).collect(Collectors.toList());
 	}
 

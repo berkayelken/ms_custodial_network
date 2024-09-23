@@ -3,13 +3,15 @@ package io.github.berkayelken.custodial.network.rest.collection;
 import io.github.berkayelken.custodial.network.domain.cross.mint.collection.NftCollection;
 import io.github.berkayelken.custodial.network.domain.cross.mint.collection.NftCollections;
 import io.github.berkayelken.custodial.network.extcall.collection.CollectionClient;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/collection")
+@RequestMapping("/api/collection")
 public class CollectionFetcherController {
 	private final CollectionClient client;
 

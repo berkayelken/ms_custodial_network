@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collation = "user")
+@Document(collection = "userEntity")
 public class UserEntity {
 	@MongoId(targetType = FieldType.STRING)
 	private String id;
