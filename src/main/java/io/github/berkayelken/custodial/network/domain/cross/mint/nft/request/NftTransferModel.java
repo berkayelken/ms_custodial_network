@@ -12,9 +12,7 @@ public class NftTransferModel {
 	private String chain;
 	private String from;
 	private String to;
-	private String contractAddress;
-	private String tokenId;
-	private String quantity;
+	private String tokenMintAddress;
 
 	public void handleChain() {
 		chain = CrossMintConstants.CHAIN;

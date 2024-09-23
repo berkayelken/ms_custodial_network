@@ -4,6 +4,7 @@ import io.github.berkayelken.custodial.network.domain.UserAuthModel;
 import io.github.berkayelken.custodial.network.domain.UserEntity;
 import io.github.berkayelken.custodial.network.domain.auth.LoginResponse;
 import io.github.berkayelken.custodial.network.domain.auth.UserType;
+import io.github.berkayelken.custodial.network.domain.cross.mint.wallet.Wallet;
 import io.github.berkayelken.custodial.network.exception.AuthorizationException;
 import io.github.berkayelken.custodial.network.exception.InvalidAuthenticationTokenException;
 import io.github.berkayelken.custodial.network.exception.UsedEmailException;
@@ -29,7 +30,8 @@ public class UserAuthenticationManager implements AuthenticationManager {
 	private final JwtProperties jwtProperties;
 	private final WalletClient walletClient;
 
-	public UserAuthenticationManager(UserRepository repository, JwtTokenProvider tokenProvider, JwtProperties jwtProperties, WalletClient walletClient) {
+	public UserAuthenticationManager(UserRepository repository, JwtTokenProvider tokenProvider, JwtProperties jwtProperties,
+			WalletClient walletClient) {
 		this.repository = repository;
 		this.tokenProvider = tokenProvider;
 		this.jwtProperties = jwtProperties;
@@ -60,9 +62,10 @@ public class UserAuthenticationManager implements AuthenticationManager {
 
 		Authentication authentication = authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 		String token = tokenProvider.createToken(authentication, user);
+		Wallet wallet = walletClient.getWalletOfUser(email);
 
 		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(email).token(token)
-				.build();
+				.wallet(wallet.getPublicKey()).build();
 	}
 
 	public LoginResponse doLogin(String email, String password) throws ExecutionException, InterruptedException {
@@ -76,9 +79,10 @@ public class UserAuthenticationManager implements AuthenticationManager {
 
 		Authentication authentication = authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 		String token = tokenProvider.createToken(authentication, user);
+		Wallet wallet = walletClient.getWalletOfUser(email);
 
 		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(email).token(token)
-				.build();
+				.wallet(wallet.getPublicKey()).build();
 	}
 
 	private UserEntity getUser(String email) throws ExecutionException, InterruptedException {

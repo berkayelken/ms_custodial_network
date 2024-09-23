@@ -57,6 +57,7 @@ public class NftClientImpl implements NftClient {
 
 	@Override
 	public NftTransferResponse transferNft(NftTransferModel requestModel) {
+		requestModel.handleChain();
 		return feignClient.transferNft(properties.getApiKey(), requestModel);
 	}
 
@@ -81,7 +82,7 @@ public class NftClientImpl implements NftClient {
 
 	private List<Nft> mergeAndGetNftList(List<Nft> allNfts, String identifier, AtomicInteger page) {
 		List<Nft> tempNftList = feignClient.getNftFromWallet(properties.getApiKey(), identifier, page.incrementAndGet(),
-				NFT_COUNT_PER_PAGE);
+				NFT_COUNT_PER_PAGE).stream().map(nft -> nft.addOwner(identifier)).toList();
 		if (CollectionUtils.isEmpty(tempNftList)) {
 			return Collections.emptyList();
 		}

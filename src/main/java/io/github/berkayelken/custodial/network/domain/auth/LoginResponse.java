@@ -15,4 +15,5 @@ public class LoginResponse {
 	private String email;
 	private String token;
 	private long expireAt;
+	private String wallet;
 }
