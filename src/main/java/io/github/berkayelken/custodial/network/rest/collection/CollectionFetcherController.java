@@ -39,4 +39,11 @@ public class CollectionFetcherController {
 	public Collection<MembershipProperty> getMembershipCollections() {
 		return properties.collectMembershipCollectionList();
 	}
+
+	@GetMapping("/lotr")
+	public MembershipProperty getLotr() {
+		return properties.findLotrCollection();
+	}
+
+
 }

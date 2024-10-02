@@ -18,9 +18,14 @@ import java.util.Map;
 public class MembershipProperties {
 	private String projectId;
 	private Map<String, MembershipProperty> collectionMap;
+	private Map<String, MembershipProperty> dummyCollection;
 
 	public Collection<MembershipProperty> collectMembershipCollectionList() {
 		return collectionMap.values().stream().map(membershipProperty -> membershipProperty.addProjectId(projectId)).toList();
+	}
+
+	public MembershipProperty findLotrCollection() {
+		return dummyCollection.get("lotr");
 	}
 
 	public boolean isRelatedCollection(String collectionId) {
