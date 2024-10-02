@@ -22,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class UserAuthenticationManager implements AuthenticationManager {
 	private final UserRepository repository;
@@ -31,8 +30,7 @@ public class UserAuthenticationManager implements AuthenticationManager {
 	private final WalletClient walletClient;
 	private final TenureService tenureService;
 
-	public UserAuthenticationManager(UserRepository repository,
-			JwtTokenProvider tokenProvider, JwtProperties jwtProperties,
+	public UserAuthenticationManager(UserRepository repository, JwtTokenProvider tokenProvider, JwtProperties jwtProperties,
 			WalletClient walletClient, TenureService tenureService) {
 		this.repository = repository;
 		this.tokenProvider = tokenProvider;
@@ -67,7 +65,7 @@ public class UserAuthenticationManager implements AuthenticationManager {
 		Wallet wallet = walletClient.getWalletOfUser(email);
 
 		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(email).token(token)
-				.wallet(wallet.getPublicKey()).build();
+				.wallet(wallet.getPublicKey()).artist(UserType.ARTIST == userType).build();
 	}
 
 	public LoginResponse doLogin(String email, String password) {
@@ -84,10 +82,11 @@ public class UserAuthenticationManager implements AuthenticationManager {
 		Wallet wallet = walletClient.getWalletOfUser(email);
 
 		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(email).token(token)
-				.order(tenureService.calculateOrder(wallet)).wallet(wallet.getPublicKey()).build();
+				.order(tenureService.calculateOrder(wallet)).wallet(wallet.getPublicKey())
+				.artist(UserType.ARTIST == UserType.findUserType(user.getRole())).build();
 	}
 
-	private UserEntity getUser(String email)  {
+	private UserEntity getUser(String email) {
 		UserEntity user = repository.findByEmail(email);
 		if (user == null)
 			throw new AuthorizationException("User cannot be found. Authorization is failed.");

@@ -23,13 +23,12 @@ public class AuthController {
 
 	@PostMapping ("/register")
 	public LoginResponse register(@RequestHeader ("email") String email, @RequestHeader ("password") String password,
-			@RequestHeader ("user-type") UserType userType) throws ExecutionException, InterruptedException {
+			@RequestHeader ("user-type") UserType userType) {
 		return authenticationManager.doRegister(email, password, userType);
 	}
 
 	@PostMapping ("/login")
-	public LoginResponse register(@RequestHeader ("email") String email, @RequestHeader ("password") String password)
-			throws ExecutionException, InterruptedException {
+	public LoginResponse register(@RequestHeader ("email") String email, @RequestHeader ("password") String password) {
 		return authenticationManager.doLogin(email, password);
 	}
 
