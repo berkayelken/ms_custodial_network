@@ -12,6 +12,27 @@ jwt:
   secret-key: "4eded600-1ff4-4a8a-8461-9a91ad8dc644"
   validity-in-ms: 7200000
 # ----------------------------------------------------------------------------------------------------------------------------------
+membership-properties:
+  project-id: "195a3f16-836a-44fa-97d0-a65c99d7cf23"
+  collection-map:
+    member:
+      collection-id: "88f34015-6e15-4e20-bbe7-be93cc501dac"
+      name: "Become a Member"
+      description: "Access to base member events, basic book share program, and DAO voting rights on overall initiatives."
+      image: "https://utfs.io/f/c7a929d0-8e79-4b2f-b911-406499924080-evjx0l.23.06.png"
+      price: "0.01"
+      currency: "SOL"
+      special-id: "QmUGkJZ9sohFfZvmq7D6PmNitj9w2vJ6NqWgkUrusAGbRN"
+    patron:
+      collection-id: "88f34015-6e15-4e20-bbe7-be93cc501dac"
+      name: "Become a Patron"
+      description: "Access to premium events, premium book share, base level art share program, and DAO voting rights on overall initiatives."
+      image: "https://utfs.io/f/b17cf421-43c8-4b74-92ee-50d46e3f7e1c-ggluia.png"
+      price: "0.02"
+      currency: "SOL"
+      special-id: "QmYdDrphgwXZfUqKuuteDFdnbvB4WMWXBRTJabkFjiJ3eW"
+
+# ----------------------------------------------------------------------------------------------------------------------------------
 cross-mint:
   api-key: ${CROSS_MINT_API_KEY}
   app-identifier: "darto@darto.com"
