@@ -1,4 +1,4 @@
-package io.github.berkayelken.custodial.network.rest;
+package io.github.berkayelken.custodial.network.rest.membership;
 
 import io.github.berkayelken.custodial.network.domain.hook.NftCreation;
 import io.github.berkayelken.custodial.network.service.HookService;

@@ -11,6 +11,7 @@ import io.github.berkayelken.custodial.network.exception.UsedEmailException;
 import io.github.berkayelken.custodial.network.extcall.wallet.WalletClient;
 import io.github.berkayelken.custodial.network.properties.JwtProperties;
 import io.github.berkayelken.custodial.network.repository.UserRepository;
+import io.github.berkayelken.custodial.network.service.TenureService;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
