@@ -45,14 +45,13 @@ public class NftClientImpl implements NftClient {
 	@Override
 	public List<Nft> getAllNft() {
 		NftCollections collections = collectionClient.getAllCollections();
-		return collections.getResults().stream().map(NftCollection::getWalletAddress).filter(Objects::nonNull).map(this::getNftList)
+		return collections.getResults().stream().map(NftCollection::getId).filter(Objects::nonNull).map(this::getCollectionNftList)
 				.flatMap(Collection::stream).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Nft> getSpecificCollectionNft(String collectionId) {
-		NftCollection nftCollection = collectionClient.getCollection(collectionId);
-		return getNftList(String.format(COLLECTION_NFT_TEMPLATE, nftCollection.getWalletAddress(), CrossMintConstants.CHAIN));
+		return getCollectionNftList(collectionId);
 	}
 
 	@Override
@@ -69,6 +68,17 @@ public class NftClientImpl implements NftClient {
 		return feignClient.mintNft(properties.getApiKey(), collection.getId(), requestModel);
 	}
 
+	private List<Nft> getCollectionNftList(String collectionId) {
+		AtomicInteger page = new AtomicInteger();
+		List<Nft> allNfts = new ArrayList<>();
+		List<Nft> tempNftList = mergeAndGetCollectionNftList(allNfts, collectionId, page);
+		while (!CollectionUtils.isEmpty(tempNftList)) {
+			tempNftList = mergeAndGetNftList(allNfts, collectionId, page);
+		}
+
+		return allNfts;
+	}
+
 	private List<Nft> getNftList(String identifier) {
 		AtomicInteger page = new AtomicInteger();
 		List<Nft> allNfts = new ArrayList<>();
@@ -83,6 +93,16 @@ public class NftClientImpl implements NftClient {
 	private List<Nft> mergeAndGetNftList(List<Nft> allNfts, String identifier, AtomicInteger page) {
 		List<Nft> tempNftList = feignClient.getNftFromWallet(properties.getApiKey(), identifier, page.incrementAndGet(),
 				NFT_COUNT_PER_PAGE).stream().map(nft -> nft.addOwner(identifier)).toList();
+		if (CollectionUtils.isEmpty(tempNftList)) {
+			return Collections.emptyList();
+		}
+		allNfts.addAll(tempNftList);
+		return tempNftList;
+	}
+
+	private List<Nft> mergeAndGetCollectionNftList(List<Nft> allNfts, String collectionId, AtomicInteger page) {
+ 		List<Nft> tempNftList = feignClient.getNftFromCollection(properties.getApiKey(), collectionId, page.incrementAndGet(),
+				NFT_COUNT_PER_PAGE);
 		if (CollectionUtils.isEmpty(tempNftList)) {
 			return Collections.emptyList();
 		}

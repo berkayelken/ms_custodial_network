@@ -42,6 +42,9 @@ public interface CrossMintFeignClient {
 	@GetMapping(value = "/2022-06-09/wallets/{identifier}/nfts", consumes = APPLICATION_TYPE, produces = APPLICATION_TYPE )
 	List<Nft> getNftFromWallet(@RequestHeader(API_KEY_HEADER) String apiKey, @PathVariable String identifier, @RequestParam int page, @RequestParam int perPage);
 
+	@GetMapping(value = "/2022-06-09/collections/{collectionId}/nfts", consumes = APPLICATION_TYPE, produces = APPLICATION_TYPE )
+	List<Nft> getNftFromCollection(@RequestHeader(API_KEY_HEADER) String apiKey, @PathVariable String collectionId, @RequestParam int page, @RequestParam int perPage);
+
 	@PostMapping(value = "/v1-alpha1/wallets/transfer", consumes = APPLICATION_TYPE, produces = APPLICATION_TYPE )
 	NftTransferResponse transferNft(@RequestHeader(API_KEY_HEADER) String apiKey, @RequestBody NftTransferModel requestModel);
 
