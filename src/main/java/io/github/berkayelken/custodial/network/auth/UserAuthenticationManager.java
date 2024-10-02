@@ -5,11 +5,14 @@ import io.github.berkayelken.custodial.network.domain.UserEntity;
 import io.github.berkayelken.custodial.network.domain.auth.LoginResponse;
 import io.github.berkayelken.custodial.network.domain.auth.UserType;
 import io.github.berkayelken.custodial.network.domain.cross.mint.wallet.Wallet;
+import io.github.berkayelken.custodial.network.domain.hook.NftCreationEntity;
 import io.github.berkayelken.custodial.network.exception.AuthorizationException;
 import io.github.berkayelken.custodial.network.exception.InvalidAuthenticationTokenException;
 import io.github.berkayelken.custodial.network.exception.UsedEmailException;
 import io.github.berkayelken.custodial.network.extcall.wallet.WalletClient;
 import io.github.berkayelken.custodial.network.properties.JwtProperties;
+import io.github.berkayelken.custodial.network.properties.MembershipProperties;
+import io.github.berkayelken.custodial.network.repository.TokenCreationRepository;
 import io.github.berkayelken.custodial.network.repository.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
@@ -20,21 +23,29 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class UserAuthenticationManager implements AuthenticationManager {
 	private final UserRepository repository;
+	private final TokenCreationRepository tokenRepository;
 	private final JwtTokenProvider tokenProvider;
 	private final JwtProperties jwtProperties;
+	private final MembershipProperties membershipProperties;
 	private final WalletClient walletClient;
 
-	public UserAuthenticationManager(UserRepository repository, JwtTokenProvider tokenProvider, JwtProperties jwtProperties,
+	public UserAuthenticationManager(UserRepository repository, TokenCreationRepository tokenRepository,
+			JwtTokenProvider tokenProvider, JwtProperties jwtProperties, MembershipProperties membershipProperties,
 			WalletClient walletClient) {
 		this.repository = repository;
+		this.tokenRepository = tokenRepository;
 		this.tokenProvider = tokenProvider;
 		this.jwtProperties = jwtProperties;
+		this.membershipProperties = membershipProperties;
 		this.walletClient = walletClient;
 	}
 
@@ -82,7 +93,16 @@ public class UserAuthenticationManager implements AuthenticationManager {
 		Wallet wallet = walletClient.getWalletOfUser(email);
 
 		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(email).token(token)
-				.wallet(wallet.getPublicKey()).build();
+				.order(calculateOrder(wallet)).wallet(wallet.getPublicKey()).build();
+	}
+
+	private int calculateOrder(Wallet wallet) {
+		List<NftCreationEntity> nftList = tokenRepository.findByWalletAddress(wallet.getPublicKey());
+		if (CollectionUtils.isEmpty(nftList)) {
+			return 0;
+		}
+
+		return membershipProperties.findTotalOrder(nftList.stream().map(NftCreationEntity::getCollectionId).toList());
 	}
 
 	private UserEntity getUser(String email) throws ExecutionException, InterruptedException {

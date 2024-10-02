@@ -14,7 +14,7 @@ public class MembershipProperty {
 	private String image;
 	private String price;
 	private String currency;
-	private String specialId;
+	private int order;
 	private String projectId;
 
 	MembershipProperty addProjectId(String projectId) {

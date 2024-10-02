@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -24,5 +25,10 @@ public class MembershipProperties {
 
 	public boolean isRelatedCollection(String collectionId) {
 		return collectionMap.values().stream().map(MembershipProperty::getCollectionId).anyMatch(collectionId::equals);
+	}
+
+	public int findTotalOrder(List<String> collectionIds) {
+		return collectionMap.values().stream().filter(prop -> collectionIds.contains(prop.getCollectionId()))
+				.map(MembershipProperty::getOrder).mapToInt(Integer::intValue).max().orElse(0);
 	}
 }

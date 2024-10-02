@@ -16,4 +16,5 @@ public class LoginResponse {
 	private String token;
 	private long expireAt;
 	private String wallet;
+	private int order;
 }

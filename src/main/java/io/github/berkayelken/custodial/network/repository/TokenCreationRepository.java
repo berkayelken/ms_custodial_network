@@ -4,7 +4,9 @@ import io.github.berkayelken.custodial.network.domain.hook.NftCreationEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TokenCreationRepository extends CrudRepository<NftCreationEntity, String> {
-	NftCreationEntity findByWalletAddress(String walletAddress);
+	List<NftCreationEntity> findByWalletAddress(String walletAddress);
 }
