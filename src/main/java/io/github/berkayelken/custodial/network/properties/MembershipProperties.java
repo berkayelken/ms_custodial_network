@@ -21,4 +21,8 @@ public class MembershipProperties {
 	public Collection<MembershipProperty> collectMembershipCollectionList() {
 		return collectionMap.values().stream().map(membershipProperty -> membershipProperty.addProjectId(projectId)).toList();
 	}
+
+	public boolean isRelatedCollection(String collectionId) {
+		return collectionMap.values().stream().map(MembershipProperty::getCollectionId).anyMatch(collectionId::equals);
+	}
 }
