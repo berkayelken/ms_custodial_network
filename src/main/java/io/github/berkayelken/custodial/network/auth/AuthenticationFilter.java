@@ -49,8 +49,8 @@ public class AuthenticationFilter implements WebFilter {
 				String[] userInfo = checkAndGetAuthorizationEndpoint(exchange);
 
 				return chain.filter(exchange.mutate().request(
-								exchange.getRequest().mutate().header(EMAIL_HEADER, userInfo[0]).header(PASSWORD_HEADER, userInfo[1]).build())
-						.build());
+						exchange.getRequest().mutate().header(EMAIL_HEADER, userInfo[0]).header(PASSWORD_HEADER, userInfo[1])
+								.build()).build());
 			}
 
 			UserAuthenticationResponse response = checkAndGetEndpointAuthentication(exchange);
@@ -70,14 +70,13 @@ public class AuthenticationFilter implements WebFilter {
 		UserAuthenticationResponse response = tokenService.doAuthentication(token);
 
 		if (!StringUtils.hasText(response.getEmail())) {
-			throw new InvalidAuthenticationTokenException("Authentication context is invalid",
-					HttpStatus.FORBIDDEN);
+			throw new InvalidAuthenticationTokenException("Authentication context is invalid", HttpStatus.FORBIDDEN);
 		}
 
 		String requestPath = exchange.getRequest().getURI().getPath();
-		if (requestPath.startsWith(ARTIST_ENDPOINT_PREFIX) && response.getRole() != UserType.ARTIST) {
-			throw new InvalidAuthenticationTokenException("Authentication context is invalid",
-					HttpStatus.FORBIDDEN);
+		if (requestPath.startsWith(ARTIST_ENDPOINT_PREFIX) && (response.getRole() != UserType.ARTIST
+				&& response.getRole() != UserType.GALLERIST)) {
+			throw new InvalidAuthenticationTokenException("Authentication context is invalid", HttpStatus.FORBIDDEN);
 		}
 
 		return response;
@@ -88,8 +87,7 @@ public class AuthenticationFilter implements WebFilter {
 		byte[] decodedTokenArr = Base64.getDecoder().decode(token);
 		String decodedToken = new String(decodedTokenArr, StandardCharsets.UTF_8);
 		if (!decodedToken.contains(AUTHORIZATION_DELIMITER)) {
-			throw new InvalidAuthenticationTokenException("Authentication context is invalid",
-					HttpStatus.FORBIDDEN);
+			throw new InvalidAuthenticationTokenException("Authentication context is invalid", HttpStatus.FORBIDDEN);
 		}
 
 		return decodedToken.split(AUTHORIZATION_DELIMITER);

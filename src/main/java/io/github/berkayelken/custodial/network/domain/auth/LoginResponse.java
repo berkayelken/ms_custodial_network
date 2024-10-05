@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,9 +15,16 @@ import lombok.Setter;
 @Builder
 public class LoginResponse {
 	private String email;
-	private String token;
-	private long expireAt;
-	private String wallet;
+	private String name;
+	private String surname;
+	private String location;
 	private boolean artist;
 	private int order;
+	private Map<String, String> socialAccounts;
+	private Map<String ,Boolean> interests;
+	private String wallet;
+	private boolean registrationCompleted;
+	private String token;
+	private long expireAt;
+
 }

@@ -48,15 +48,15 @@ public class UserAuthenticationManager implements AuthenticationManager {
 		return new UsernamePasswordAuthenticationToken(email, authModel.getPassword(), authModel.getAuthorities());
 	}
 
-	public LoginResponse doRegister(String email, String password, UserType userType) {
+	public LoginResponse doRegister(String email, String password) {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 
 		if (repository.existsByEmail(email)) {
 			throw new UsedEmailException();
 		}
 
-		UserEntity user = UserEntity.builder().email(email).password(encoder.encode(password)).role(userType.getValidOperations())
-				.build();
+		UserEntity user = UserEntity.builder().email(email).password(encoder.encode(password))
+				.role(UserType.PLAIN_MEMBER.getValidOperations()).build();
 		repository.save(user);
 		walletClient.createWallet(email);
 
@@ -65,7 +65,21 @@ public class UserAuthenticationManager implements AuthenticationManager {
 		Wallet wallet = walletClient.getWalletOfUser(email);
 
 		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(email).token(token)
-				.wallet(wallet.getPublicKey()).artist(UserType.ARTIST == userType).build();
+				.wallet(wallet.getPublicKey()).artist(false).registrationCompleted(false).build();
+	}
+
+	public LoginResponse updateUser(String email, String password, UserType type, UserEntity entity) {
+		UserEntity user = getUser(email);
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+		if (!encoder.matches(password, user.getPassword())) {
+			throw new InvalidAuthenticationTokenException("Authentication context is invalid",
+					HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+		}
+
+		user.updateUser(entity, type);
+
+		return doLogin(repository.save(user));
 	}
 
 	public LoginResponse doLogin(String email, String password) {
@@ -77,13 +91,19 @@ public class UserAuthenticationManager implements AuthenticationManager {
 					HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
 		}
 
+		return doLogin(user);
+	}
+
+	public LoginResponse doLogin(UserEntity user) {
 		Authentication authentication = authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 		String token = tokenProvider.createToken(authentication, user);
-		Wallet wallet = walletClient.getWalletOfUser(email);
+		Wallet wallet = walletClient.getWalletOfUser(user.getEmail());
 
-		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(email).token(token)
+		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(user.getEmail()).token(token)
 				.order(tenureService.calculateOrder(wallet)).wallet(wallet.getPublicKey())
-				.artist(UserType.ARTIST == UserType.findUserType(user.getRole())).build();
+				.artist(UserType.isArtistType(user.getRole())).name(user.getName()).surname(user.getSurname())
+				.location(user.getLocation()).interests(user.getInterests()).socialAccounts(user.getSocialAccounts())
+				.registrationCompleted(0 == user.getRole()).build();
 	}
 
 	private UserEntity getUser(String email) {
