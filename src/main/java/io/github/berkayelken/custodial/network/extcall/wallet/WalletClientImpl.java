@@ -36,10 +36,14 @@ public class WalletClientImpl implements WalletClient {
 	}
 
 	private boolean hasSolanaWallet(String email) {
-		List<Wallet> wallets = feignClient.getWalletsOfUser(properties.getApiKey(), email);
-		if(CollectionUtils.isEmpty(wallets)) {
+		try {
+			List<Wallet> wallets = feignClient.getWalletsOfUser(properties.getApiKey(), email);
+			if(CollectionUtils.isEmpty(wallets)) {
+				return false;
+			}
+			return wallets.stream().anyMatch(wallet -> CrossMintConstants.CHAIN.equals(wallet.getChain()));
+		} catch (Exception e) {
 			return false;
 		}
-		return wallets.stream().anyMatch(wallet -> CrossMintConstants.CHAIN.equals(wallet.getChain()));
 	}
 }

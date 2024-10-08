@@ -29,13 +29,16 @@ public class UserEntity {
 	private Map<String, String> socialAccounts;
 	private Map<String, Boolean> interests;
 	private int role;
+	private UserType type;
 
-	public void updateUser(UserEntity entity, UserType type) {
+	public void updateUser(UserEntity entity) {
 		name = entity.getName();
 		surname = entity.getSurname();
 		location = entity.getLocation();
 		socialAccounts = entity.getSocialAccounts();
 		interests = entity.getInterests();
-		role = type.getValidOperations();
+		if (role == 0) {
+			role = entity.type.getValidOperations();
+		}
 	}
 }

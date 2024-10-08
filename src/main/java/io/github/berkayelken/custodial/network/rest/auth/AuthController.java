@@ -34,10 +34,4 @@ public class AuthController {
 		return authenticationManager.doLogin(email, password);
 	}
 
-	@PutMapping
-	public LoginResponse updateUserContext(@RequestHeader ("email") String email, @RequestHeader ("password") String password,
-			@RequestHeader ("user-type") UserType type, @RequestBody UserEntity requestEntity) {
-		return authenticationManager.updateUser(email, password, type, requestEntity);
-	}
-
 }

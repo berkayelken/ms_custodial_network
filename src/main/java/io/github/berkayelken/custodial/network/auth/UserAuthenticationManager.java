@@ -68,16 +68,10 @@ public class UserAuthenticationManager implements AuthenticationManager {
 				.wallet(wallet.getPublicKey()).artist(false).registrationCompleted(false).build();
 	}
 
-	public LoginResponse updateUser(String email, String password, UserType type, UserEntity entity) {
+	public LoginResponse updateUser(String email, UserEntity entity) {
 		UserEntity user = getUser(email);
-		PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-		if (!encoder.matches(password, user.getPassword())) {
-			throw new InvalidAuthenticationTokenException("Authentication context is invalid",
-					HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
-		}
-
-		user.updateUser(entity, type);
+		user.updateUser(entity);
 
 		return doLogin(repository.save(user));
 	}
@@ -103,7 +97,7 @@ public class UserAuthenticationManager implements AuthenticationManager {
 				.order(tenureService.calculateOrder(wallet)).wallet(wallet.getPublicKey())
 				.artist(UserType.isArtistType(user.getRole())).name(user.getName()).surname(user.getSurname())
 				.location(user.getLocation()).interests(user.getInterests()).socialAccounts(user.getSocialAccounts())
-				.registrationCompleted(0 == user.getRole()).build();
+				.registrationCompleted(0 != user.getRole()).build();
 	}
 
 	private UserEntity getUser(String email) {
