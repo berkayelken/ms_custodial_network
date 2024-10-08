@@ -21,7 +21,7 @@ public class LoginResponse {
 	private boolean artist;
 	private int order;
 	private Map<String, String> socialAccounts;
-	private Map<String ,Boolean> interests;
+	private Map<String, Boolean> interests;
 	private String wallet;
 	private boolean registrationCompleted;
 	private String token;

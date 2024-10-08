@@ -10,6 +10,6 @@ import lombok.ToString;
 @ToString
 public class NftAttribute {
 	private String value;
-	@JsonProperty("trait_type")
+	@JsonProperty ("trait_type")
 	private String traitType;
 }

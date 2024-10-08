@@ -15,7 +15,7 @@ import java.util.Collection;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/collection")
+@RequestMapping ("/api/collection")
 public class CollectionFetcherController {
 	private final CollectionClient client;
 	private final MembershipProperties properties;
@@ -25,25 +25,24 @@ public class CollectionFetcherController {
 		this.properties = properties;
 	}
 
-	@GetMapping("/all")
+	@GetMapping ("/all")
 	public NftCollections getAllCollections() {
 		return client.getAllCollections();
 	}
 
-	@GetMapping("/{collectionID}")
+	@GetMapping ("/{collectionID}")
 	public NftCollection getCollection(@PathVariable String collectionID) {
 		return client.getCollection(collectionID);
 	}
 
-	@GetMapping("/membership")
+	@GetMapping ("/membership")
 	public Collection<MembershipProperty> getMembershipCollections() {
 		return properties.collectMembershipCollectionList();
 	}
 
-	@GetMapping("/lotr")
+	@GetMapping ("/lotr")
 	public MembershipProperty getLotr() {
 		return properties.findLotrCollection();
 	}
-
 
 }

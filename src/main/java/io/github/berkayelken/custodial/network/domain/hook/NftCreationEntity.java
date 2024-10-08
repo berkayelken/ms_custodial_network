@@ -10,9 +10,9 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Getter
 @Setter
 @ToString
-@Document(collection = "CreatedNft")
+@Document (collection = "CreatedNft")
 public class NftCreationEntity {
-	@MongoId(targetType = FieldType.STRING)
+	@MongoId (targetType = FieldType.STRING)
 	private String id;
 	private String collectionId;
 	private String nftContractAddress;

@@ -101,7 +101,7 @@ public class NftClientImpl implements NftClient {
 	}
 
 	private List<Nft> mergeAndGetCollectionNftList(List<Nft> allNfts, String collectionId, AtomicInteger page) {
- 		List<Nft> tempNftList = feignClient.getNftFromCollection(properties.getApiKey(), collectionId, page.incrementAndGet(),
+		List<Nft> tempNftList = feignClient.getNftFromCollection(properties.getApiKey(), collectionId, page.incrementAndGet(),
 				NFT_COUNT_PER_PAGE);
 		if (CollectionUtils.isEmpty(tempNftList)) {
 			return Collections.emptyList();

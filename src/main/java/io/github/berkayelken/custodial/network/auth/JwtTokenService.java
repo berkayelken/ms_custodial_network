@@ -39,7 +39,8 @@ public class JwtTokenService implements AuthTokenService {
 		Authentication auth = jwtTokenProvider.getAuthentication(token);
 
 		if (auth == null)
-			throw new InvalidAuthenticationTokenException("Authentication context is invalid", HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+			throw new InvalidAuthenticationTokenException("Authentication context is invalid",
+					HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
 
 		SecurityContextHolder.getContext().setAuthentication(auth);
 	}
