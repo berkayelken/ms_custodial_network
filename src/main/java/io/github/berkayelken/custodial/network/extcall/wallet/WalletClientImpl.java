@@ -22,7 +22,7 @@ public class WalletClientImpl implements WalletClient {
 
 	@Override
 	public void createWallet(String email) {
-		if(hasSolanaWallet(email)) {
+		if (hasSolanaWallet(email)) {
 			return;
 		}
 		feignClient.createWallet(properties.getApiKey(), new WalletRequestModel(email));
@@ -38,7 +38,7 @@ public class WalletClientImpl implements WalletClient {
 	private boolean hasSolanaWallet(String email) {
 		try {
 			List<Wallet> wallets = feignClient.getWalletsOfUser(properties.getApiKey(), email);
-			if(CollectionUtils.isEmpty(wallets)) {
+			if (CollectionUtils.isEmpty(wallets)) {
 				return false;
 			}
 			return wallets.stream().anyMatch(wallet -> CrossMintConstants.CHAIN.equals(wallet.getChain()));

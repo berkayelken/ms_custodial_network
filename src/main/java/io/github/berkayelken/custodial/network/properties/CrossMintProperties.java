@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties("cross-mint")
+@ConfigurationProperties ("cross-mint")
 public class CrossMintProperties {
 	private String apiKey;
 	private String appIdentifier;

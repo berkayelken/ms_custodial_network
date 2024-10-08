@@ -93,8 +93,8 @@ public class UserAuthenticationManager implements AuthenticationManager {
 		String token = tokenProvider.createToken(authentication, user);
 		Wallet wallet = walletClient.getWalletOfUser(user.getEmail());
 
-		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(user.getEmail()).token(token)
-				.order(tenureService.calculateOrder(wallet)).wallet(wallet.getPublicKey())
+		return LoginResponse.builder().expireAt(jwtProperties.createAndGetExpireAt().toEpochMilli()).email(user.getEmail())
+				.token(token).order(tenureService.calculateOrder(wallet)).wallet(wallet.getPublicKey())
 				.artist(UserType.isArtistType(user.getRole())).name(user.getName()).surname(user.getSurname())
 				.location(user.getLocation()).interests(user.getInterests()).socialAccounts(user.getSocialAccounts())
 				.registrationCompleted(0 != user.getRole()).build();

@@ -3,7 +3,6 @@ package io.github.berkayelken.custodial.network.domain.cross.mint.collection.req
 import io.github.berkayelken.custodial.network.domain.cross.mint.CrossMintConstants;
 import io.github.berkayelken.custodial.network.domain.cross.mint.CrossMintMetaData;
 import io.github.berkayelken.custodial.network.domain.cross.mint.collection.CollectionPayment;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

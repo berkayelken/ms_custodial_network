@@ -14,12 +14,12 @@ import org.springframework.web.reactive.result.method.annotation.ResponseEntityE
 @Order (Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class CustomRestAdvisor extends ResponseEntityExceptionHandler {
-	@ExceptionHandler({ AuthorizationException.class, InvalidAuthenticationTokenException.class})
+	@ExceptionHandler ({ AuthorizationException.class, InvalidAuthenticationTokenException.class })
 	public ResponseEntity<?> handleAuthorizationException() {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 	}
 
-	@ExceptionHandler({ UsedEmailException.class })
+	@ExceptionHandler ({ UsedEmailException.class })
 	public ResponseEntity<?> handleUsedEmailException() {
 		return ResponseEntity.badRequest().body("Email in use!");
 	}

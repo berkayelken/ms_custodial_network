@@ -2,7 +2,7 @@ package io.github.berkayelken.custodial.network.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class InvalidAuthenticationTokenException extends CustomException  {
+public class InvalidAuthenticationTokenException extends CustomException {
 	public InvalidAuthenticationTokenException(String responseMessage, HttpStatus httpStatus) {
 		this(null, responseMessage, httpStatus);
 	}

@@ -9,7 +9,6 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
@@ -31,8 +30,7 @@ class SecurityConfig implements WebFluxConfigurer {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		configuration.addAllowedOriginPattern("*");
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT",
-				"DELETE", "OPTIONS"));
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setMaxAge(3600L);
 		configuration.setAllowCredentials(true);
